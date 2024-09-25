@@ -13,7 +13,12 @@
         <h1>Welcome to</h1>
         <h2>ROBIFY!</h2>
         <div id="loading-message">Loading...</div> <!-- Loading message -->
-        <a href="#" id="login-button">Login with Spotify</a>
+
+        <!-- Login with Spotify Button -->
+        <a href="#" id="login-button" class="shared-button">Login with Spotify</a>
+
+        <!-- Play Robby Trivia Game Button -->
+        <button id="trivia-button" class="shared-button">Play Robby Trivia Game</button> <!-- Trivia game button -->
     </div>
 
     <!-- Loading screen after login but before image and phrase -->
@@ -23,8 +28,8 @@
 
     <!-- Evaluation buttons -->
     <div id="evaluation-buttons" style="display: none;">
-        <button id="evaluate-top-genre">Evaluate Top Genre</button>
-        <button id="evaluate-top-artist">Evaluate Top Artist</button>
+        <button id="evaluate-top-genre" class="shared-button">Evaluate Top Genre</button>
+        <button id="evaluate-top-artist" class="shared-button">Evaluate Top Artist</button>
     </div>
 
     <!-- Robby's content (image + phrase) -->
@@ -40,6 +45,11 @@
         // Handle the login button click
         document.getElementById('login-button').addEventListener('click', function() {
             window.location.href = '/login'; // Redirect to the login route
+        });
+
+        // Handle the trivia button click
+        document.getElementById('trivia-button').addEventListener('click', function() {
+            window.location.href = '/trivia'; // Redirect to the trivia game page
         });
 
         window.onload = function() {
@@ -145,3 +155,4 @@
 
 </body>
 </html>
+

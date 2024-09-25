@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robby Trivia Game</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Use the same stylesheet -->
+</head>
+<body>
+
+    <!-- Trivia Game -->
+    <div id="trivia-game">
+        <h1>Robby Trivia Game</h1>
+        <p id="question"></p>
+
+        <!-- Options for answers -->
+        <div id="options">
+            <button class="option-button" id="option1"></button>
+            <button class="option-button" id="option2"></button>
+            <button class="option-button" id="option3"></button>
+            <button class="option-button" id="option4"></button>
+        </div>
+
+        <!-- Show the result after answering -->
+        <p id="result"></p>
+
+        <!-- Next Question Button -->
+        <button id="next-question" style="display: none;">Next Question</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is Robby's favorite food?",
+                options: ["Pizza", "Sushi", "Boom Boom Chicken", "Pasta"],
+                answer: "Boom Boom Chicken"
+            },
+            {
+                question: "Who is Robby's favorite artist?",
+                options: ["Harry Styles", "Taylor Swift", "Kanye West", "Adele"],
+                answer: "Taylor Swift"
+            },
+            {
+                question: "What's Robby's catchphrase?",
+                options: ["YES YES YESS!!!", "Boom Boom Chicken", "Beyond", "all of the above"],
+                answer: "all of the above"
+            },
+            {
+                question: "What would Robby do for Harry Styles?",
+                options: ["Anything", "Nothing", "Sing with him", "Dance with him"],
+                answer: "Anything"
+            },
+            {
+                question: "What's Robby's biggest dream?",
+                options: ["To meet Harry Styles", "To go salmon fishing in the Rye", "To eat Boom Boom Chicken", "To be WEIRD"],
+                answer: "To go salmon fishing in the Rye"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionElement = document.getElementById("question");
+        const optionButtons = document.querySelectorAll(".option-button");
+        const resultElement = document.getElementById("result");
+        const nextQuestionButton = document.getElementById("next-question");
+
+        // Function to display a question
+        function displayQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            optionButtons.forEach((button, index) => {
+                button.textContent = currentQuestion.options[index];
+                button.disabled = false;
+            });
+            resultElement.textContent = "";
+            nextQuestionButton.style.display = "none";
+        }
+
+        // Function to handle option click
+        optionButtons.forEach(button => {
+            button.addEventListener("click", (e) => {
+                const selectedAnswer = e.target.textContent;
+                const correctAnswer = questions[currentQuestionIndex].answer;
+                if (selectedAnswer === correctAnswer) {
+                    resultElement.textContent = "Correct!";
+                    score++;
+                } else {
+                    resultElement.textContent = `Wrong! The correct answer is: ${correctAnswer}`;
+                }
+                optionButtons.forEach(btn => btn.disabled = true);
+                nextQuestionButton.style.display = "block";
+            });
+        });
+
+        // Function to move to the next question
+        nextQuestionButton.addEventListener("click", () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                questionElement.textContent = `You've completed the game! Your score is: ${score}/${questions.length}`;
+                document.getElementById("options").style.display = "none";
+                nextQuestionButton.style.display = "none";
+            }
+        });
+
+        // Display the first question when the page loads
+        window.onload = displayQuestion;
+    </script>
+
+</body>
+</html>

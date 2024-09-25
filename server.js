@@ -25,6 +25,11 @@ app.get('/check-session', (req, res) => {
     res.send(`Access Token from Session: ${req.session.access_token || 'Not set'}`);
 });
 
+// Serve trivia.html when the user navigates to /trivia
+app.get('/trivia', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'trivia.html'));  // Adjust the path if necessary
+});
+
 // Serve the homepage
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -33,3 +38,4 @@ app.get('/', (req, res) => {
 // Start the Server
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
