@@ -68,8 +68,8 @@
                             const robbyImage = document.getElementById('robby-image');
                             const robbyPhrase = document.getElementById('robby-phrase');
 
-                            // Set the music message before showing Robby content
-                            document.getElementById('user-music-message').innerText = `You listen to a lot of ${data.genre || 'music'}. This is what Robby thinks of your taste:`;
+                            // Set the music message with the genre highlighted using CSS class
+                            document.getElementById('user-music-message').innerHTML = `You listen to a lot of <span class="genre-highlight">${data.genre || 'music'}</span>. This is what Robby thinks of your taste:`;
 
                             // After 1.5 seconds, show the Robby content
                             setTimeout(() => {

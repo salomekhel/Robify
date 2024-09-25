@@ -37,7 +37,6 @@ exports.spotifyCallback = (req, res) => {
         req.session.refresh_token = refresh_token; // Store refresh token in session
         console.log('Access Token:', access_token); // Log the access token
         console.log('Refresh Token:', refresh_token); // Log the refresh token
-        console.log('Stored Access Token in Session:', req.session.access_token); // Verify storage
         res.redirect('/?access_token=' + access_token); // Redirect to home with access token
     })
     .catch(error => {
@@ -46,11 +45,9 @@ exports.spotifyCallback = (req, res) => {
     });
 };
 
-// Fetch user's top tracks using the access token
+// Fetch user's top tracks and evaluate genre
 exports.getUserTopTracks = (req, res) => {
     const accessToken = req.session.access_token;
-
-    console.log('Access Token from Session:', accessToken); // Log the access token being used
 
     if (!accessToken) {
         return res.status(401).send('Access token is missing');
@@ -61,15 +58,31 @@ exports.getUserTopTracks = (req, res) => {
     })
     .then(response => {
         const tracks = response.data.items;
-        const robbyContent = generateRobbyContent(tracks);
-        res.json(robbyContent); // Send the formatted data back to the client
+
+        // Fetch the genre for each track's artist
+        const artistGenrePromises = tracks.map(track => {
+            const artistId = track.artists[0].id;  // Get the artist ID
+            return axios.get(`https://api.spotify.com/v1/artists/${artistId}`, {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            });
+        });
+
+        // Wait for all artist genre requests to complete
+        Promise.all(artistGenrePromises)
+            .then(artistResponses => {
+                // Collect genres from each artist
+                const genres = artistResponses.map(artistResponse => artistResponse.data.genres[0] || 'Unknown');  // Get the first genre, or 'Unknown'
+
+                const robbyContent = generateRobbyContentForGenres(genres);  // Create Robby content based on genres
+                res.json(robbyContent);  // Send the Robby content to the client
+            })
+            .catch(error => {
+                console.error('Error fetching artist genres:', error.response ? error.response.data : error);
+                res.status(500).send('Error fetching genres');
+            });
     })
     .catch(error => {
         console.error('Error fetching top tracks:', error.response ? error.response.data : error);
-        if (error.response && error.response.status === 401) {
-            console.log('Access token expired or invalid. Attempting to refresh...');
-            return exports.refreshAccessToken(req, res); // Refresh the token if expired
-        }
         res.status(500).send('Error fetching data');
     });
 };
@@ -77,8 +90,6 @@ exports.getUserTopTracks = (req, res) => {
 // Fetch user's top artist using the access token
 exports.getUserTopArtist = (req, res) => {
     const accessToken = req.session.access_token;
-
-    console.log('Access Token from Session:', accessToken); // Log the access token being used
 
     if (!accessToken) {
         return res.status(401).send('Access token is missing');
@@ -96,10 +107,6 @@ exports.getUserTopArtist = (req, res) => {
     })
     .catch(error => {
         console.error('Error fetching top artist:', error.response ? error.response.data : error);
-        if (error.response && error.response.status === 401) {
-            console.log('Access token expired or invalid. Attempting to refresh...');
-            return exports.refreshAccessToken(req, res); // Refresh the token if expired
-        }
         res.status(500).send('Error fetching data');
     });
 };
@@ -135,25 +142,24 @@ exports.refreshAccessToken = (req, res) => {
 };
 
 // Custom function to map Spotify data to Robby content for genres
-function generateRobbyContent(tracks) {
+function generateRobbyContentForGenres(genres) {
     const genreMapping = {
-        'Taylor Swift': { phrase: "YES YES YESSS", image: "robby_taylor.jpg" },
-        'Harry Styles': { phrase: "There is genuinely nothing I would not let Harry Styles do to me", image: "robby_taylor.jpg" }, // Reusing Taylor's image for Harry Styles
-        'Kanye West': { phrase: "BOOM BOOM CHICKEN", image: "robby_kanye.jpg" },
-        // Additional mappings...
+        'pop': { phrase: "You listen to Pop, you're so mainstream!", image: "robby_pop.jpg" },
+        'rock': { phrase: "Rock on! You're a true headbanger.", image: "robby_rock.jpg" },
+        'hip hop': { phrase: "Hip hop is life, isn't it?", image: "robby_hiphop.jpg" },
+        'indie': { phrase: "Indie vibes all the way.", image: "robby_indie.jpg" },
+        // Add more genre mappings here
     };
 
-    let genreFound = tracks.find(track => Object.keys(genreMapping).includes(track.genre));
-    let genre = genreFound ? genreFound.genre : 'Pop'; // Default to 'Pop' if no specific genre is found
+    let genreFound = genres.find(genre => genreMapping[genre.toLowerCase()]);  // Match with a known genre
+    let genre = genreFound ? genreFound.toLowerCase() : 'Pop';  // Default to 'Pop' if no genre is matched
 
-    let message = genre ? `You listen to a lot of ${genre}. This is what Robby thinks of that:` : 'You listen to a lot of music. This is what Robby thinks of that:';
     let phrase = genreMapping[genre].phrase;
     let image = `/images/${genreMapping[genre].image}`;
 
-    return { phrase, image, message };
+    // Return the genre along with the phrase and image
+    return { genre, phrase, image };
 }
-
-
 
 // Custom function to map Spotify data to Robby content for artists
 function generateRobbyContentForArtist(artist) {

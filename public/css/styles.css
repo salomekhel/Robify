@@ -88,19 +88,20 @@ button:hover {
 #robby-content {
     margin-top: 20px;
     padding: 0;
-    text-align: center;
+    text-align: center;  /* Ensure content is centered */
     display: none;
     transition: transform 0.3s ease;
 }
 
 /* Styling for the image */
 #robby-image {
-    max-width: 450px;
-    width: 100%;
-    height: auto;
+    max-width: 250px;  /* Set consistent max-width */
+    width: 100%;  /* Ensure image is responsive */
+    height: auto;  /* Maintain aspect ratio */
     border-radius: 15px;
     opacity: 0;
     display: block;
+    margin: 0 auto;  /* Center the image horizontally */
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
@@ -112,6 +113,7 @@ button:hover {
 p {
     font-size: 1.5rem;
     color: #fff;
+    text-align: center;  /* Ensure the text is centered */
 }
 
 #loading-after-login h2 {
@@ -119,3 +121,9 @@ p {
     color: #fff;
     margin-top: 0;
 }
+
+/* Style for the genre text */
+.genre-highlight {
+    color: #ffec40; /* Yellow color */
+}
+
