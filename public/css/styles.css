@@ -60,14 +60,12 @@ a:hover {
     color: #fff;
 }
 
-/* Button styling */
 button {
     background-color: #ff7e5f;
     border: none;
     color: white;
     padding: 10px 20px;
     text-align: center;
-    text-decoration: none;
     font-size: 1rem;
     margin: 10px;
     cursor: pointer;
@@ -77,6 +75,11 @@ button {
 
 button:hover {
     background-color: #feb47b;
+}
+
+#home-button, #switch-evaluation {
+    display: inline-block;
+    margin-top: 20px;
 }
 
 /* Hide the border effect */
