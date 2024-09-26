@@ -145,3 +145,28 @@ p {
 #post-birthday-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+#evaluate-top-track {
+    background-color: #ff7e5f; /* New color for the track evaluation button */
+    transition: background-color 0.3s ease;
+}
+
+#evaluate-top-track:hover {
+    background-color: #feb47b;
+}
+.spotify-button {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #1DB954; /* Spotify green color */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: background-color 0.3s ease;
+}
+
+.spotify-button:hover {
+    background-color: #17a44a; /* Darker green on hover */
+}

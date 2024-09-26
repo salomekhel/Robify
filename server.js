@@ -7,10 +7,13 @@ const app = express();
 
 // Set up express-session middleware
 app.use(session({
-    secret: 'yourSecretKey', // Change this to a secure key in production
+    secret: process.env.SESSION_SECRET || 'yourSecretKey', // Use env var for secret in production
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Set to true if using HTTPS
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production', // Only secure cookies in production
+        maxAge: 24 * 60 * 60 * 1000 // 1-day expiry for sessions
+    }
 }));
 
 // Middleware to serve static files
@@ -20,7 +23,7 @@ app.use(express.static('public'));
 const spotifyRoutes = require('./routes/spotifyRoutes');
 app.use('/', spotifyRoutes);
 
-// Temporary route to check session
+// Temporary route to check session (good for debugging)
 app.get('/check-session', (req, res) => {
     res.send(`Access Token from Session: ${req.session.access_token || 'Not set'}`);
 });
@@ -35,7 +38,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Error handling middleware (catch unexpected errors)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
+
 // Start the Server
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
