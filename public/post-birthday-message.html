@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Birthday Message</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* General styling for the container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* Full height */
+            background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Match the body background */
+            padding: 20px;
+            color: #fff; /* Text color */
+        }
+
+        h1 {
+            font-size: 3rem; /* Increased font size */
+            margin: 20px 0;
+        }
+
+        textarea {
+            width: 80%;
+            max-width: 600px;
+            height: 80px;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative; /* Add position to enable z-index */
+            z-index: 10; /* Ensure it's above other elements */
+        }
+
+        button {
+            background-color: #007BFF; /* Blue background for buttons */
+            color: white; /* White text */
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 1rem; /* Consistent font size */
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Home button styling */
+        #home-button {
+            background-color: #ffd93d; /* Yellow background */
+            color: #000; /* Black text */
+            padding: 10px 20px; /* Adjust button size */
+            border-radius: 5px;
+            margin-top: 20px; /* Space above the button */
+            transition: background-color 0.3s ease;
+        }
+
+        #home-button:hover {
+            background-color: #ffec40; /* Lighter yellow on hover */
+        }
+
+        #messages-display {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 2rem; /* Larger font size for posted messages */
+        }
+
+        /* File upload styling */
+        .file-upload {
+            margin: 20px 0;
+        }
+
+        .upload-button {
+            display: inline-block;
+            background-color: #007BFF; /* Blue background */
+            color: white; /* White text */
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        input[type="file"] {
+            display: none; /* Hide the default file input */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Post a Birthday Message for Robby</h1>
+        <textarea id="message-input" placeholder="Write your message here..."></textarea>
+        <button id="post-message">Post Message</button>
+
+        <div class="file-upload">
+            <label for="image-input" class="upload-button">Choose File</label>
+            <input type="file" id="image-input" accept="image/*" />
+            <button id="post-image">Post Image</button>
+        </div>
+
+        <button id="home-button">Home</button>
+    </div>
+
+    <script>
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFB833', '#33FFF2'];
+        const messagesDisplay = document.getElementById('messages-display');
+
+        document.getElementById('post-message').addEventListener('click', function() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+
+            if (message) {
+                const messageElement = document.createElement('div');
+                messageElement.textContent = message;
+
+                messageElement.style.color = colors[Math.floor(Math.random() * colors.length)];
+                messageElement.style.position = 'absolute';
+                messageElement.style.top = Math.random() * 80 + 'vh';
+                messageElement.style.left = Math.random() * 80 + 'vw';
+                messageElement.style.pointerEvents = 'none'; 
+                messageElement.style.fontSize = Math.random() * (4 - 1) + 1 + 'rem';
+
+                document.body.appendChild(messageElement);
+                messageInput.value = ''; 
+            } else {
+                alert('Please enter a message before posting!');
+            }
+        });
+
+        document.getElementById('post-image').addEventListener('click', function() {
+            const imageInput = document.getElementById('image-input');
+            const file = imageInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = event.target.result;
+                    imgElement.style.position = 'absolute';
+                    imgElement.style.top = Math.random() * 80 + 'vh'; 
+                    imgElement.style.left = Math.random() * 80 + 'vw'; 
+                    imgElement.style.maxWidth = '100px'; 
+
+                    document.body.appendChild(imgElement);
+                }
+                reader.readAsDataURL(file);
+                imageInput.value = ''; 
+            } else {
+                alert('Please select an image to post!');
+            }
+        });
+
+        document.getElementById('home-button').addEventListener('click', function() {
+            window.location.href = '/'; 
+        });
+    </script>
+
+</body>
+</html>
