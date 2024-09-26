@@ -12,15 +12,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh; /* Full height */
-            background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Match the body background */
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             padding: 20px;
-            color: #fff; /* Text color */
+            color: #fff;
         }
 
         h1 {
-            font-size: 3rem; /* Increased font size */
+            font-size: 3rem;
             margin: 20px 0;
+            z-index: 10;
         }
 
         textarea {
@@ -33,40 +34,40 @@
             border-radius: 5px;
             border: 1px solid #ccc;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative; /* Add position to enable z-index */
-            z-index: 10; /* Ensure it's above other elements */
+            position: relative;
+            z-index: 10;
         }
 
         button {
-            background-color: #007BFF; /* Blue background for buttons */
-            color: white; /* White text */
+            background-color: #007BFF;
+            color: white;
             padding: 10px 20px;
             border-radius: 5px;
             border: none;
             cursor: pointer;
             margin: 10px;
-            font-size: 1rem; /* Consistent font size */
+            font-size: 1rem;
             transition: background-color 0.3s ease;
-            z-index: 10; /* Ensure it's above other elements */
+            z-index: 10;
         }
 
         button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #0056b3;
         }
 
         /* Home button styling */
         #home-button {
-            background-color: #ffd93d; /* Yellow background */
-            color: #000; /* Black text */
-            padding: 10px 20px; /* Adjust button size */
+            background-color: #ffd93d;
+            color: #000;
+            padding: 10px 20px;
             border-radius: 5px;
-            margin-top: 20px; /* Space above the button */
+            margin-top: 20px;
             transition: background-color 0.3s ease;
-            z-index: 10; /* Ensure it's above other elements */
+            z-index: 10;
         }
 
         #home-button:hover {
-            background-color: #ffec40; /* Lighter yellow on hover */
+            background-color: #ffec40;
         }
 
         #messages-display {
@@ -79,30 +80,33 @@
             color: #000;
             border-radius: 5px;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 2rem; /* Larger font size for posted messages */
+            font-size: 2rem;
+            position: relative;
         }
 
         /* File upload styling */
         .file-upload {
             margin: 20px 0;
+            z-index: 10;
         }
 
         .upload-button {
             display: inline-block;
-            background-color: #007BFF; /* Blue background */
-            color: white; /* White text */
+            background-color: #007BFF;
+            color: white;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            z-index: 10;
         }
 
         .upload-button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #0056b3;
         }
 
         input[type="file"] {
-            display: none; /* Hide the default file input */
+            display: none;
         }
     </style>
 </head>
@@ -122,9 +126,44 @@
         <button id="home-button">Home</button>
     </div>
 
+    <div id="messages-display"></div>
+
     <script>
         const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFB833', '#33FFF2'];
         const messagesDisplay = document.getElementById('messages-display');
+
+        // Load messages and images from local storage on page load
+        window.onload = function() {
+            let messages = JSON.parse(localStorage.getItem('messages')) || [];
+            let images = JSON.parse(localStorage.getItem('images')) || [];
+
+            // Display stored messages
+            messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.textContent = message;
+
+                messageElement.style.color = colors[Math.floor(Math.random() * colors.length)];
+                messageElement.style.position = 'absolute';
+                messageElement.style.top = Math.random() * 80 + 'vh';
+                messageElement.style.left = Math.random() * 80 + 'vw';
+                messageElement.style.pointerEvents = 'none';
+                messageElement.style.fontSize = Math.random() * (4 - 1) + 1 + 'rem';
+
+                document.body.appendChild(messageElement);
+            });
+
+            // Display stored images
+            images.forEach(src => {
+                const imgElement = document.createElement('img');
+                imgElement.src = src;
+                imgElement.style.position = 'absolute';
+                imgElement.style.top = Math.random() * 80 + 'vh';
+                imgElement.style.left = Math.random() * 80 + 'vw';
+                imgElement.style.maxWidth = '100px';
+
+                document.body.appendChild(imgElement);
+            });
+        };
 
         document.getElementById('post-message').addEventListener('click', function() {
             const messageInput = document.getElementById('message-input');
@@ -138,11 +177,17 @@
                 messageElement.style.position = 'absolute';
                 messageElement.style.top = Math.random() * 80 + 'vh';
                 messageElement.style.left = Math.random() * 80 + 'vw';
-                messageElement.style.pointerEvents = 'none'; 
+                messageElement.style.pointerEvents = 'none';
                 messageElement.style.fontSize = Math.random() * (4 - 1) + 1 + 'rem';
 
                 document.body.appendChild(messageElement);
-                messageInput.value = ''; 
+
+                // Store message in Local Storage
+                let messages = JSON.parse(localStorage.getItem('messages')) || [];
+                messages.push(message);
+                localStorage.setItem('messages', JSON.stringify(messages));
+
+                messageInput.value = '';
             } else {
                 alert('Please enter a message before posting!');
             }
@@ -158,23 +203,30 @@
                     const imgElement = document.createElement('img');
                     imgElement.src = event.target.result;
                     imgElement.style.position = 'absolute';
-                    imgElement.style.top = Math.random() * 80 + 'vh'; 
-                    imgElement.style.left = Math.random() * 80 + 'vw'; 
-                    imgElement.style.maxWidth = '100px'; 
+                    imgElement.style.top = Math.random() * 80 + 'vh';
+                    imgElement.style.left = Math.random() * 80 + 'vw';
+                    imgElement.style.maxWidth = '100px';
 
                     document.body.appendChild(imgElement);
+
+                    // Store image in Local Storage
+                    let images = JSON.parse(localStorage.getItem('images')) || [];
+                    images.push(event.target.result);
+                    localStorage.setItem('images', JSON.stringify(images));
                 }
                 reader.readAsDataURL(file);
-                imageInput.value = ''; 
+                imageInput.value = '';
             } else {
                 alert('Please select an image to post!');
             }
         });
 
         document.getElementById('home-button').addEventListener('click', function() {
-            window.location.href = '/'; 
+            window.location.href = '/';
         });
     </script>
 
 </body>
 </html>
+
+

@@ -35,8 +35,8 @@ exports.spotifyCallback = (req, res) => {
 
         req.session.access_token = access_token; // Store access token in session
         req.session.refresh_token = refresh_token; // Store refresh token in session
-        console.log('Access Token:', access_token); // Log the access token
-        console.log('Refresh Token:', refresh_token); // Log the refresh token
+        // console.log('Access Token:', access_token); // Log the access token
+        // console.log('Refresh Token:', refresh_token); // Log the refresh token
         res.redirect('/?access_token=' + access_token); // Redirect to home with access token
     })
     .catch(error => {
@@ -119,7 +119,7 @@ exports.refreshAccessToken = (req, res) => {
         return res.status(400).json({ error: 'No refresh token available in session' });
     }
 
-    console.log('Using Refresh Token:', refresh_token); // Log the refresh token
+    // console.log('Using Refresh Token:', refresh_token); // Log the refresh token
 
     axios.post('https://accounts.spotify.com/api/token', querystring.stringify({
         grant_type: 'refresh_token',
@@ -132,7 +132,7 @@ exports.refreshAccessToken = (req, res) => {
     .then(response => {
         const newAccessToken = response.data.access_token;
         req.session.access_token = newAccessToken; // Update the access token in session
-        console.log('New Access Token:', newAccessToken); // Log the new access token
+        // console.log('New Access Token:', newAccessToken); // Log the new access token
         res.redirect('/user-top-tracks'); // Redirect to fetch top tracks
     })
     .catch(error => {
