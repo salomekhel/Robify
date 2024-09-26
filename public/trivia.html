@@ -26,6 +26,11 @@
 
         <!-- Next Question Button -->
         <button id="next-question" style="display: none;">Next Question</button>
+        
+        <!-- Home Button -->
+        <div id="home-button-container" style="display: flex; justify-content: center; margin-top: 20px;">
+            <button id="home-button" style="display: none;">Home</button>
+        </div>
     </div>
 
     <script>
@@ -42,8 +47,8 @@
             },
             {
                 question: "What's Robby's catchphrase?",
-                options: ["YES YES YESS!!!", "Boom Boom Chicken", "Beyond", "all of the above"],
-                answer: "all of the above"
+                options: ["YES YES YESS!!!", "Boom Boom Chicken", "Beyond", "All of the above"],
+                answer: "All of the above"
             },
             {
                 question: "What would Robby do for Harry Styles?",
@@ -64,6 +69,7 @@
         const optionButtons = document.querySelectorAll(".option-button");
         const resultElement = document.getElementById("result");
         const nextQuestionButton = document.getElementById("next-question");
+        const homeButton = document.getElementById("home-button");
 
         // Function to display a question
         function displayQuestion() {
@@ -102,7 +108,13 @@
                 questionElement.textContent = `You've completed the game! Your score is: ${score}/${questions.length}`;
                 document.getElementById("options").style.display = "none";
                 nextQuestionButton.style.display = "none";
+                homeButton.style.display = "block"; // Show the home button
             }
+        });
+
+        // Home Button Click Handler
+        homeButton.addEventListener("click", () => {
+            window.location.href = '/'; // Redirect to the welcome page
         });
 
         // Display the first question when the page loads
@@ -111,3 +123,4 @@
 
 </body>
 </html>
+
