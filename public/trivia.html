@@ -4,123 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Robby Trivia Game</title>
-    <link rel="stylesheet" href="/css/styles.css"> <!-- Use the same stylesheet -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+
+        .answers {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .answers li {
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-size: 1.2rem;
+            color: green;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Trivia Game -->
-    <div id="trivia-game">
-        <h1>Robby Trivia Game</h1>
-        <p id="question"></p>
-
-        <!-- Options for answers -->
-        <div id="options">
-            <button class="option-button" id="option1"></button>
-            <button class="option-button" id="option2"></button>
-            <button class="option-button" id="option3"></button>
-            <button class="option-button" id="option4"></button>
+    <div class="container">
+        <h1>Robby Trivia</h1>
+        <div id="quiz-container">
+            <div class="question" id="question"></div>
+            <ul class="answers" id="answers"></ul>
         </div>
-
-        <!-- Show the result after answering -->
-        <p id="result"></p>
-
-        <!-- Next Question Button -->
-        <button id="next-question" style="display: none;">Next Question</button>
-        
-        <!-- Home Button -->
-        <div id="home-button-container" style="display: flex; justify-content: center; margin-top: 20px;">
-            <button id="home-button" style="display: none;">Home</button>
-        </div>
+        <button id="next-button" style="display:none;">Next Question</button>
+        <div id="result"></div>
     </div>
 
     <script>
-        const questions = [
+        const quizQuestions = [
             {
-                question: "What is Robby's favorite food?",
-                options: ["Pizza", "Sushi", "Boom Boom Chicken", "Pasta"],
-                answer: "Boom Boom Chicken"
+                question: "What is Robby's favorite color?",
+                answers: [
+                    "Blue",
+                    "Green",
+                    "Yellow",
+                    "Red"
+                ],
+                correct: "Yellow"
             },
             {
-                question: "Who is Robby's favorite artist?",
-                options: ["Harry Styles", "Taylor Swift", "Kanye West", "Adele"],
-                answer: "Taylor Swift"
+                question: "What is Robby's go-to drink?",
+                answers: [
+                    "Coffee",
+                    "Tea",
+                    "Water",
+                    "Soda"
+                ],
+                correct: "Coffee"
             },
             {
-                question: "What's Robby's catchphrase?",
-                options: ["YES YES YESS!!!", "Boom Boom Chicken", "Beyond", "All of the above"],
-                answer: "All of the above"
+                question: "Which of these is Robby's favorite hobby?",
+                answers: [
+                    "Reading",
+                    "Cooking",
+                    "Traveling",
+                    "Gaming"
+                ],
+                correct: "Gaming"
             },
             {
-                question: "What would Robby do for Harry Styles?",
-                options: ["Anything", "Nothing", "Sing with him", "Dance with him"],
-                answer: "Anything"
-            },
-            {
-                question: "What's Robby's biggest dream?",
-                options: ["To meet Harry Styles", "To go salmon fishing in the Rye", "To eat Boom Boom Chicken", "To be WEIRD"],
-                answer: "To go salmon fishing in the Rye"
+                question: "Which pet does Robby love the most?",
+                answers: [
+                    "Dogs",
+                    "Cats",
+                    "Birds",
+                    "Fish"
+                ],
+                correct: "Cats"
             }
         ];
 
         let currentQuestionIndex = 0;
         let score = 0;
 
-        const questionElement = document.getElementById("question");
-        const optionButtons = document.querySelectorAll(".option-button");
-        const resultElement = document.getElementById("result");
-        const nextQuestionButton = document.getElementById("next-question");
-        const homeButton = document.getElementById("home-button");
+        function loadQuestion() {
+            const questionObj = quizQuestions[currentQuestionIndex];
+            document.getElementById("question").textContent = questionObj.question;
 
-        // Function to display a question
-        function displayQuestion() {
-            const currentQuestion = questions[currentQuestionIndex];
-            questionElement.textContent = currentQuestion.question;
-            optionButtons.forEach((button, index) => {
-                button.textContent = currentQuestion.options[index];
-                button.disabled = false;
+            const answersContainer = document.getElementById("answers");
+            answersContainer.innerHTML = ''; // Clear previous answers
+
+            questionObj.answers.forEach(answer => {
+                const li = document.createElement("li");
+                li.innerHTML = `<button class="answer-button">${answer}</button>`;
+                answersContainer.appendChild(li);
             });
-            resultElement.textContent = "";
-            nextQuestionButton.style.display = "none";
+
+            // Add event listeners for answer buttons
+            document.querySelectorAll(".answer-button").forEach(button => {
+                button.addEventListener("click", checkAnswer);
+            });
         }
 
-        // Function to handle option click
-        optionButtons.forEach(button => {
-            button.addEventListener("click", (e) => {
-                const selectedAnswer = e.target.textContent;
-                const correctAnswer = questions[currentQuestionIndex].answer;
-                if (selectedAnswer === correctAnswer) {
-                    resultElement.textContent = "Correct!";
-                    score++;
-                } else {
-                    resultElement.textContent = `Wrong! The correct answer is: ${correctAnswer}`;
-                }
-                optionButtons.forEach(btn => btn.disabled = true);
-                nextQuestionButton.style.display = "block";
-            });
-        });
+        function checkAnswer(event) {
+            const selectedAnswer = event.target.textContent;
+            const correctAnswer = quizQuestions[currentQuestionIndex].correct;
 
-        // Function to move to the next question
-        nextQuestionButton.addEventListener("click", () => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                displayQuestion();
+            if (selectedAnswer === correctAnswer) {
+                score++;
+                document.getElementById("result").textContent = "Correct!";
             } else {
-                questionElement.textContent = `You've completed the game! Your score is: ${score}/${questions.length}`;
-                document.getElementById("options").style.display = "none";
-                nextQuestionButton.style.display = "none";
-                homeButton.style.display = "block"; // Show the home button
+                document.getElementById("result").textContent = `Wrong! The correct answer was: ${correctAnswer}`;
             }
+
+            currentQuestionIndex++;
+
+            // If more questions remain, show the next button
+            if (currentQuestionIndex < quizQuestions.length) {
+                document.getElementById("next-button").style.display = "inline-block";
+            } else {
+                showFinalScore();
+            }
+
+            // Disable further clicking on answers
+            document.querySelectorAll(".answer-button").forEach(button => {
+                button.disabled = true;
+            });
+        }
+
+        function showFinalScore() {
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("result").innerHTML = `Game Over! Your score is ${score}/${quizQuestions.length}`;
+        }
+
+        // Handle next button click
+        document.getElementById("next-button").addEventListener("click", function() {
+            document.getElementById("result").textContent = '';
+            document.getElementById("next-button").style.display = "none";
+            loadQuestion();
         });
 
-        // Home Button Click Handler
-        homeButton.addEventListener("click", () => {
-            window.location.href = '/'; // Redirect to the welcome page
-        });
-
-        // Display the first question when the page loads
-        window.onload = displayQuestion;
+        // Load the first question when the page loads
+        window.onload = function() {
+            loadQuestion();
+        };
     </script>
 
 </body>
 </html>
+
 
