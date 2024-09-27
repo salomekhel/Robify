@@ -126,6 +126,21 @@
         let currentQuestionIndex = 0;
         let score = 0;
 
+        // Ensure the DOM is fully loaded before adding event listeners
+        window.onload = function() {
+            loadQuestion();
+
+            // Safeguard: Check if next-button exists before adding event listener
+            const nextButton = document.getElementById("next-button");
+            if (nextButton) {
+                nextButton.addEventListener("click", function() {
+                    document.getElementById("result").textContent = '';
+                    nextButton.style.display = "none";
+                    loadQuestion();
+                });
+            }
+        };
+
         function loadQuestion() {
             const questionObj = quizQuestions[currentQuestionIndex];
             document.getElementById("question").textContent = questionObj.question;
@@ -175,18 +190,6 @@
             document.getElementById("quiz-container").style.display = "none";
             document.getElementById("result").innerHTML = `Game Over! Your score is ${score}/${quizQuestions.length}`;
         }
-
-        // Handle next button click
-        document.getElementById("next-button").addEventListener("click", function() {
-            document.getElementById("result").textContent = '';
-            document.getElementById("next-button").style.display = "none";
-            loadQuestion();
-        });
-
-        // Load the first question when the page loads
-        window.onload = function() {
-            loadQuestion();
-        };
     </script>
 
 </body>
