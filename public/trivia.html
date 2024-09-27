@@ -72,6 +72,26 @@
             background-color: #ffec40;
             color: black;
         }
+
+        #name-input {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+        }
+
+        #scoreboard {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #scoreboard ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #scoreboard li {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -84,6 +104,19 @@
         </div>
         <button id="next-button" style="display:none;">Next Question</button>
         <div id="result"></div>
+
+        <!-- Input for player name after game -->
+        <div id="name-input">
+            <input type="text" id="player-name" placeholder="Enter your name" />
+            <button id="submit-score">Submit Score</button>
+        </div>
+
+        <!-- Scoreboard -->
+        <div id="scoreboard">
+            <h2>Scoreboard</h2>
+            <ul id="score-list"></ul>
+        </div>
+
         <button id="home-button">Go to Home Screen</button> <!-- Home button -->
     </div>
 
@@ -123,7 +156,6 @@
         window.onload = function() {
             loadQuestion();
 
-            // Safeguard: Check if next-button exists before adding event listener
             const nextButton = document.getElementById("next-button");
             if (nextButton) {
                 nextButton.addEventListener("click", function() {
@@ -133,13 +165,22 @@
                 });
             }
 
-            // Add event listener to the Home button
+            // Home button to go back to the welcome screen
             const homeButton = document.getElementById("home-button");
             if (homeButton) {
                 homeButton.addEventListener("click", function() {
                     window.location.href = '/'; // Redirect to the welcome screen
                 });
             }
+
+            // Handle submitting the player's name and score
+            document.getElementById('submit-score').addEventListener('click', function() {
+                const playerName = document.getElementById('player-name').value;
+                if (playerName) {
+                    saveScore(playerName, score);
+                    displayScoreboard();
+                }
+            });
         };
 
         function loadQuestion() {
@@ -190,14 +231,35 @@
         function showFinalScore() {
             document.getElementById("quiz-container").style.display = "none";
             document.getElementById("result").innerHTML = `Game Over! Your score is ${score}/${quizQuestions.length}`;
+            document.getElementById("name-input").style.display = "block"; // Show name input after game
+        }
 
-            // Show the Home button after the game is over
-            document.getElementById("home-button").style.display = "block";
+        function saveScore(playerName, playerScore) {
+            const scores = JSON.parse(localStorage.getItem('triviaScores')) || [];
+            scores.push({ name: playerName, score: playerScore });
+            scores.sort((a, b) => b.score - a.score); // Sort by score in descending order
+            localStorage.setItem('triviaScores', JSON.stringify(scores.slice(0, 20))); // Keep top 20 scores
+        }
+
+        function displayScoreboard() {
+            document.getElementById("name-input").style.display = "none"; // Hide the name input
+            const scoreboard = document.getElementById("scoreboard");
+            const scoreList = document.getElementById("score-list");
+            const scores = JSON.parse(localStorage.getItem('triviaScores')) || [];
+            scoreList.innerHTML = ''; // Clear previous scores
+
+            scores.forEach((score, index) => {
+                const li = document.createElement("li");
+                li.textContent = `${index + 1}. ${score.name} - ${score.score}`;
+                scoreList.appendChild(li);
+            });
+
+            scoreboard.style.display = "block"; // Show scoreboard
+            document.getElementById("home-button").style.display = "block"; // Show home button
         }
     </script>
 
 </body>
 </html>
-
 
 
