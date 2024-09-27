@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
@@ -18,6 +19,58 @@ app.use(session({
 
 // Middleware to serve static files
 app.use(express.static('public'));
+
+// Body parser middleware to handle JSON requests
+app.use(express.json());
+
+// Path to messages file for storing the posted birthday messages
+const messagesFile = path.join(__dirname, 'messages.json');
+
+// Ensure the file exists with an empty array if it doesn't exist
+if (!fs.existsSync(messagesFile)) {
+    fs.writeFileSync(messagesFile, JSON.stringify([]));
+}
+
+// API route to post a message
+app.post('/api/messages', (req, res) => {
+    const { content } = req.body;
+
+    // Read current messages from the file
+    fs.readFile(messagesFile, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading messages file:', err);
+            return res.status(500).json({ error: 'Error reading messages file' });
+        }
+
+        let messages = JSON.parse(data);
+        const newMessage = { content, timestamp: new Date().toISOString() };
+
+        // Add the new message to the array
+        messages.push(newMessage);
+
+        // Write the updated messages back to the file
+        fs.writeFile(messagesFile, JSON.stringify(messages), 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing messages file:', err);
+                return res.status(500).json({ error: 'Error writing messages file' });
+            }
+            res.status(201).json(newMessage);
+        });
+    });
+});
+
+// API route to get all messages
+app.get('/api/messages', (req, res) => {
+    fs.readFile(messagesFile, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading messages file:', err);
+            return res.status(500).json({ error: 'Error reading messages file' });
+        }
+
+        const messages = JSON.parse(data);
+        res.json(messages);
+    });
+});
 
 // Import and use the Spotify routes
 const spotifyRoutes = require('./routes/spotifyRoutes');

@@ -132,95 +132,55 @@
         const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFB833', '#33FFF2'];
         const messagesDisplay = document.getElementById('messages-display');
 
-        // Load messages and images from local storage on page load
+        // Fetch and display messages from the server on page load
         window.onload = function() {
-            let messages = JSON.parse(localStorage.getItem('messages')) || [];
-            let images = JSON.parse(localStorage.getItem('images')) || [];
-
-            // Display stored messages
-            messages.forEach(message => {
-                const messageElement = document.createElement('div');
-                messageElement.textContent = message;
-
-                messageElement.style.color = colors[Math.floor(Math.random() * colors.length)];
-                messageElement.style.position = 'absolute';
-                messageElement.style.top = Math.random() * 80 + 'vh';
-                messageElement.style.left = Math.random() * 80 + 'vw';
-                messageElement.style.pointerEvents = 'none';
-                messageElement.style.fontSize = Math.random() * (4 - 1) + 1 + 'rem';
-
-                document.body.appendChild(messageElement);
-            });
-
-            // Display stored images
-            images.forEach(src => {
-                const imgElement = document.createElement('img');
-                imgElement.src = src;
-                imgElement.style.position = 'absolute';
-                imgElement.style.top = Math.random() * 80 + 'vh';
-                imgElement.style.left = Math.random() * 80 + 'vw';
-                imgElement.style.maxWidth = '100px';
-
-                document.body.appendChild(imgElement);
-            });
+            fetch('/api/messages')
+                .then(response => response.json())
+                .then(messages => {
+                    messages.forEach(message => {
+                        displayMessage(message.content);
+                    });
+                });
         };
 
+        // Handle posting a new message
         document.getElementById('post-message').addEventListener('click', function() {
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value;
 
             if (message) {
-                const messageElement = document.createElement('div');
-                messageElement.textContent = message;
-
-                messageElement.style.color = colors[Math.floor(Math.random() * colors.length)];
-                messageElement.style.position = 'absolute';
-                messageElement.style.top = Math.random() * 80 + 'vh';
-                messageElement.style.left = Math.random() * 80 + 'vw';
-                messageElement.style.pointerEvents = 'none';
-                messageElement.style.fontSize = Math.random() * (4 - 1) + 1 + 'rem';
-
-                document.body.appendChild(messageElement);
-
-                // Store message in Local Storage
-                let messages = JSON.parse(localStorage.getItem('messages')) || [];
-                messages.push(message);
-                localStorage.setItem('messages', JSON.stringify(messages));
-
-                messageInput.value = '';
+                // Send message to the server
+                fetch('/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content: message })
+                })
+                .then(response => response.json())
+                .then(newMessage => {
+                    displayMessage(newMessage.content);
+                    messageInput.value = '';
+                });
             } else {
                 alert('Please enter a message before posting!');
             }
         });
 
-        document.getElementById('post-image').addEventListener('click', function() {
-            const imageInput = document.getElementById('image-input');
-            const file = imageInput.files[0];
+        // Function to display a message on the screen
+        function displayMessage(content) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = content;
+            messageElement.style.color = colors[Math.floor(Math.random() * colors.length)];
+            messageElement.style.position = 'absolute';
+            messageElement.style.top = Math.random() * 80 + 'vh';
+            messageElement.style.left = Math.random() * 80 + 'vw';
+            messageElement.style.pointerEvents = 'none';
+            messageElement.style.fontSize = Math.random() * (4 - 1) + 1 + 'rem';
+            document.body.appendChild(messageElement);
+        }
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imgElement = document.createElement('img');
-                    imgElement.src = event.target.result;
-                    imgElement.style.position = 'absolute';
-                    imgElement.style.top = Math.random() * 80 + 'vh';
-                    imgElement.style.left = Math.random() * 80 + 'vw';
-                    imgElement.style.maxWidth = '100px';
-
-                    document.body.appendChild(imgElement);
-
-                    // Store image in Local Storage
-                    let images = JSON.parse(localStorage.getItem('images')) || [];
-                    images.push(event.target.result);
-                    localStorage.setItem('images', JSON.stringify(images));
-                }
-                reader.readAsDataURL(file);
-                imageInput.value = '';
-            } else {
-                alert('Please select an image to post!');
-            }
-        });
-
+        // Home button functionality
         document.getElementById('home-button').addEventListener('click', function() {
             window.location.href = '/';
         });
@@ -228,5 +188,6 @@
 
 </body>
 </html>
+
 
 
