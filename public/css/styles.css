@@ -131,7 +131,7 @@ p {
 }
 
 #post-birthday-button {
-    background-color: #007BFF; /* Blue background */
+    background-color:  #ff7e5f; /* Blue background */
     color: white; /* White text */
     padding: 12px 30px; /* Button padding */
     border-radius: 5px; /* Rounded corners */
@@ -143,7 +143,7 @@ p {
 }
 
 #post-birthday-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #feb47b; /* Darker blue on hover */
 }
 
 #evaluate-top-track {

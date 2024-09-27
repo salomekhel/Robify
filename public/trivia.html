@@ -65,6 +65,13 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        #home-button {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+            background-color: #ffec40;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +84,7 @@
         </div>
         <button id="next-button" style="display:none;">Next Question</button>
         <div id="result"></div>
+        <button id="home-button">Go to Home Screen</button> <!-- Home button -->
     </div>
 
     <script>
@@ -122,6 +130,14 @@
                     document.getElementById("result").textContent = '';
                     nextButton.style.display = "none";
                     loadQuestion();
+                });
+            }
+
+            // Add event listener to the Home button
+            const homeButton = document.getElementById("home-button");
+            if (homeButton) {
+                homeButton.addEventListener("click", function() {
+                    window.location.href = '/'; // Redirect to the welcome screen
                 });
             }
         };
@@ -174,10 +190,14 @@
         function showFinalScore() {
             document.getElementById("quiz-container").style.display = "none";
             document.getElementById("result").innerHTML = `Game Over! Your score is ${score}/${quizQuestions.length}`;
+
+            // Show the Home button after the game is over
+            document.getElementById("home-button").style.display = "block";
         }
     </script>
 
 </body>
 </html>
+
 
 
