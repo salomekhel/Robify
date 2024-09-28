@@ -3,39 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Birthday Message</title>
+    <title>Robby Trivia Game</title>
     <link rel="stylesheet" href="/css/styles.css">
     <style>
-        /* General styling for the container */
-        .container {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
             padding: 20px;
-            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
         }
 
         h1 {
-            font-size: 3rem;
-            margin: 20px 0;
-            z-index: 10;
+            text-align: center;
+            color: #007BFF;
         }
 
-        textarea {
-            width: 80%;
-            max-width: 600px;
-            height: 80px;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
+        .question {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+
+        .answers {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .answers li {
+            margin: 10px 0;
         }
 
         button {
@@ -45,145 +52,209 @@
             border-radius: 5px;
             border: none;
             cursor: pointer;
-            margin: 10px;
-            font-size: 1rem;
             transition: background-color 0.3s ease;
-            z-index: 10;
         }
 
         button:hover {
             background-color: #0056b3;
         }
 
-        /* Home button styling */
+        #result {
+            font-size: 1.2rem;
+            color: green;
+            text-align: center;
+            margin-top: 20px;
+        }
+
         #home-button {
-            background-color: #ffd93d;
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 5px;
+            display: none; /* Initially hidden */
             margin-top: 20px;
-            transition: background-color 0.3s ease;
-            z-index: 10;
-        }
-
-        #home-button:hover {
             background-color: #ffec40;
+            color: black;
         }
 
-        #messages-display {
+        #name-input {
+            display: none; /* Initially hidden */
             margin-top: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            color: #000;
-            border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 2rem;
-            position: relative;
         }
 
-        /* File upload styling */
-        .file-upload {
-            margin: 20px 0;
-            z-index: 10;
+        #scoreboard {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+            text-align: center;
         }
 
-        .upload-button {
-            display: inline-block;
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            z-index: 10;
+        #scoreboard ul {
+            list-style: none;
+            padding: 0;
         }
 
-        .upload-button:hover {
-            background-color: #0056b3;
-        }
-
-        input[type="file"] {
-            display: none;
+        #scoreboard li {
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Post a Birthday Message for Robby</h1>
-        <textarea id="message-input" placeholder="Write your message here..."></textarea>
-        <button id="post-message">Post Message</button>
+        <h1>Robby Trivia</h1>
+        <div id="quiz-container">
+            <div class="question" id="question"></div>
+            <ul class="answers" id="answers"></ul>
+        </div>
+        <button id="next-button" style="display:none;">Next Question</button>
+        <div id="result"></div>
 
-        <!-- <div class="file-upload">
-            <label for="image-input" class="upload-button">Choose File</label>
-            <input type="file" id="image-input" accept="image/*" />
-            <button id="post-image">Post Image</button>
-        </div> -->
+        <!-- Input for player name after game -->
+        <div id="name-input">
+            <input type="text" id="player-name" placeholder="Enter your name" />
+            <button id="submit-score">Submit Score</button>
+        </div>
 
-        <button id="home-button">Home</button>
+        <!-- Scoreboard -->
+        <div id="scoreboard">
+            <h2>Scoreboard</h2>
+            <ul id="score-list"></ul>
+        </div>
+
+        <button id="home-button">Go to Home Screen</button> <!-- Home button -->
     </div>
 
-    <div id="messages-display"></div>
-
     <script>
-        const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFB833', '#33FFF2'];
-        const messagesDisplay = document.getElementById('messages-display');
+        const quizQuestions = [
+            {
+                question: "What is Robby's favorite food?",
+                answers: ["Pizza", "Sushi", "Boom Boom Chicken", "Pasta"],
+                correct: "Boom Boom Chicken"
+            },
+            {
+                question: "Who is Robby's favorite artist?",
+                answers: ["Harry Styles", "Taylor Swift", "Kanye West", "Adele"],
+                correct: "Taylor Swift"
+            },
+            {
+                question: "What's Robby's catchphrase?",
+                answers:  ["YES YES YESS!!!", "Boom Boom Chicken", "Beyond", "All of the above"],
+                correct: "All of the above"
+            },
+            {
+                question: "What would Robby do for Harry Styles?",
+                answers: ["Anything", "Nothing", "Sing with him", "Dance with him"],
+                correct:  "Anything"
+            },
+            {
+                question: "What's Robby's biggest dream?",
+                answers: ["To meet Harry Styles", "To go salmon fishing in the Rye", "To eat Boom Boom Chicken", "To be WEIRD"],
+                correct:  "To go salmon fishing in the Rye"
+            }
+        ];
 
-        // Fetch and display messages from the server on page load
+        let currentQuestionIndex = 0;
+        let score = 0;
+
         window.onload = function() {
-            fetch('/api/messages')
-                .then(response => response.json())
-                .then(messages => {
-                    messages.forEach(message => {
-                        displayMessage(message.content);
-                    });
+            loadQuestion();
+
+            const nextButton = document.getElementById("next-button");
+            if (nextButton) {
+                nextButton.addEventListener("click", function() {
+                    document.getElementById("result").textContent = '';
+                    nextButton.style.display = "none";
+                    loadQuestion();
                 });
+            }
+
+            const homeButton = document.getElementById("home-button");
+            if (homeButton) {
+                homeButton.addEventListener("click", function() {
+                    window.location.href = '/'; // Redirect to the welcome screen
+                });
+            }
+
+            document.getElementById('submit-score').addEventListener('click', function() {
+                const playerName = document.getElementById('player-name').value;
+                if (playerName) {
+                    submitScore(playerName, score);
+                }
+            });
         };
 
-        // Handle posting a new message
-        document.getElementById('post-message').addEventListener('click', function() {
-            const messageInput = document.getElementById('message-input');
-            const message = messageInput.value;
+        function loadQuestion() {
+            const questionObj = quizQuestions[currentQuestionIndex];
+            document.getElementById("question").textContent = questionObj.question;
 
-            if (message) {
-                // Send message to the server
-                fetch('/api/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ content: message })
-                })
-                .then(response => response.json())
-                .then(newMessage => {
-                    displayMessage(newMessage.content);
-                    messageInput.value = '';
-                });
-            } else {
-                alert('Please enter a message before posting!');
-            }
-        });
+            const answersContainer = document.getElementById("answers");
+            answersContainer.innerHTML = ''; 
 
-        // Function to display a message on the screen
-        function displayMessage(content) {
-            const messageElement = document.createElement('div');
-            messageElement.textContent = content;
-            messageElement.style.color = colors[Math.floor(Math.random() * colors.length)];
-            messageElement.style.position = 'absolute';
-            messageElement.style.top = Math.random() * 80 + 'vh';
-            messageElement.style.left = Math.random() * 80 + 'vw';
-            messageElement.style.pointerEvents = 'none';
-            messageElement.style.fontSize = Math.random() * (4 - 1) + 1 + 'rem';
-            document.body.appendChild(messageElement);
+            questionObj.answers.forEach(answer => {
+                const li = document.createElement("li");
+                li.innerHTML = `<button class="answer-button">${answer}</button>`;
+                answersContainer.appendChild(li);
+            });
+
+            document.querySelectorAll(".answer-button").forEach(button => {
+                button.addEventListener("click", checkAnswer);
+            });
         }
 
-        // Home button functionality
-        document.getElementById('home-button').addEventListener('click', function() {
-            window.location.href = '/';
-        });
+        function checkAnswer(event) {
+            const selectedAnswer = event.target.textContent;
+            const correctAnswer = quizQuestions[currentQuestionIndex].correct;
+
+            if (selectedAnswer === correctAnswer) {
+                score++;
+                document.getElementById("result").textContent = "Correct!";
+            } else {
+                document.getElementById("result").textContent = `Wrong! The correct answer was: ${correctAnswer}`;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quizQuestions.length) {
+                document.getElementById("next-button").style.display = "inline-block";
+            } else {
+                showFinalScore();
+            }
+
+            document.querySelectorAll(".answer-button").forEach(button => {
+                button.disabled = true;
+            });
+        }
+
+        function showFinalScore() {
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("result").innerHTML = `Game Over! Your score is ${score}/${quizQuestions.length}`;
+            document.getElementById("name-input").style.display = "block"; 
+        }
+
+        function submitScore(name, score) {
+            fetch('/api/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, score })
+            })
+            .then(response => response.json())
+            .then(displayScoreboard);
+        }
+
+        function displayScoreboard() {
+            fetch('/api/scores')
+            .then(response => response.json())
+            .then(scores => {
+                const scoreList = document.getElementById('score-list');
+                scoreList.innerHTML = '';
+
+                scores.forEach((score, index) => {
+                    const li = document.createElement("li");
+                    li.textContent = `${index + 1}. ${score.name} - ${score.score}`;
+                    scoreList.appendChild(li);
+                });
+
+                document.getElementById("scoreboard").style.display = "block";
+                document.getElementById("name-input").style.display = "none";
+                document.getElementById("home-button").style.display = "block";
+            });
+        }
     </script>
 
 </body>

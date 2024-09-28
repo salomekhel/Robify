@@ -25,13 +25,19 @@ app.use(express.json());
 
 // Path to messages file for storing the posted birthday messages
 const messagesFile = path.join(__dirname, 'messages.json');
+const scoresFile = path.join(__dirname, 'scores.json'); // Path to the scores file for storing the trivia scores
 
-// Ensure the file exists with an empty array if it doesn't exist
+// Ensure the messages file exists with an empty array if it doesn't exist
 if (!fs.existsSync(messagesFile)) {
     fs.writeFileSync(messagesFile, JSON.stringify([]));
 }
 
-// API route to post a message
+// Ensure the scores file exists with an empty array if it doesn't exist
+if (!fs.existsSync(scoresFile)) {
+    fs.writeFileSync(scoresFile, JSON.stringify([]));
+}
+
+// API route to post a birthday message
 app.post('/api/messages', (req, res) => {
     const { content } = req.body;
 
@@ -59,7 +65,7 @@ app.post('/api/messages', (req, res) => {
     });
 });
 
-// API route to get all messages
+// API route to get all birthday messages
 app.get('/api/messages', (req, res) => {
     fs.readFile(messagesFile, 'utf8', (err, data) => {
         if (err) {
@@ -69,6 +75,50 @@ app.get('/api/messages', (req, res) => {
 
         const messages = JSON.parse(data);
         res.json(messages);
+    });
+});
+
+// API route to post a trivia score
+app.post('/api/scores', (req, res) => {
+    const { name, score } = req.body;
+
+    if (!name || typeof score !== 'number') {
+        return res.status(400).json({ error: 'Invalid data' });
+    }
+
+    // Read current scores from the file
+    fs.readFile(scoresFile, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading scores file:', err);
+            return res.status(500).json({ error: 'Error reading scores file' });
+        }
+
+        let scores = JSON.parse(data);
+        scores.push({ name, score });
+        scores.sort((a, b) => b.score - a.score); // Sort by score in descending order
+        scores = scores.slice(0, 20); // Keep top 20 scores
+
+        // Write the updated scores back to the file
+        fs.writeFile(scoresFile, JSON.stringify(scores), 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing scores file:', err);
+                return res.status(500).json({ error: 'Error writing scores file' });
+            }
+            res.status(201).json(scores);
+        });
+    });
+});
+
+// API route to get top 20 trivia scores
+app.get('/api/scores', (req, res) => {
+    fs.readFile(scoresFile, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading scores file:', err);
+            return res.status(500).json({ error: 'Error reading scores file' });
+        }
+
+        const scores = JSON.parse(data);
+        res.json(scores);
     });
 });
 
