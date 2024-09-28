@@ -79,6 +79,7 @@ app.get('/api/messages', (req, res) => {
 });
 
 // API route to post a trivia score
+// API route to post a trivia score, with synchronous file writing to prevent race conditions
 app.post('/api/scores', (req, res) => {
     const { name, score } = req.body;
 
@@ -98,16 +99,17 @@ app.post('/api/scores', (req, res) => {
         scores.sort((a, b) => b.score - a.score); // Sort by score in descending order
         scores = scores.slice(0, 20); // Keep top 20 scores
 
-        // Write the updated scores back to the file
-        fs.writeFile(scoresFile, JSON.stringify(scores), 'utf8', (err) => {
-            if (err) {
-                console.error('Error writing scores file:', err);
-                return res.status(500).json({ error: 'Error writing scores file' });
-            }
+        // Write the updated scores back to the file synchronously to avoid race conditions
+        try {
+            fs.writeFileSync(scoresFile, JSON.stringify(scores), 'utf8');
             res.status(201).json(scores);
-        });
+        } catch (writeErr) {
+            console.error('Error writing scores file:', writeErr);
+            res.status(500).json({ error: 'Error writing scores file' });
+        }
     });
 });
+
 
 // API route to get top 20 trivia scores
 app.get('/api/scores', (req, res) => {
@@ -118,6 +120,11 @@ app.get('/api/scores', (req, res) => {
         }
 
         const scores = JSON.parse(data);
+
+        // Set headers to disable caching
+        res.setHeader('Cache-Control', 'no-store');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         res.json(scores);
     });
 });
