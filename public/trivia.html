@@ -152,7 +152,6 @@
         let currentQuestionIndex = 0;
         let score = 0;
 
-        // Ensure the DOM is fully loaded before adding event listeners
         window.onload = function() {
             loadQuestion();
 
@@ -165,7 +164,6 @@
                 });
             }
 
-            // Home button to go back to the welcome screen
             const homeButton = document.getElementById("home-button");
             if (homeButton) {
                 homeButton.addEventListener("click", function() {
@@ -173,12 +171,10 @@
                 });
             }
 
-            // Handle submitting the player's name and score
             document.getElementById('submit-score').addEventListener('click', function() {
                 const playerName = document.getElementById('player-name').value;
                 if (playerName) {
-                    saveScore(playerName, score);
-                    displayScoreboard();
+                    submitScore(playerName, score);
                 }
             });
         };
@@ -188,7 +184,7 @@
             document.getElementById("question").textContent = questionObj.question;
 
             const answersContainer = document.getElementById("answers");
-            answersContainer.innerHTML = ''; // Clear previous answers
+            answersContainer.innerHTML = ''; 
 
             questionObj.answers.forEach(answer => {
                 const li = document.createElement("li");
@@ -196,7 +192,6 @@
                 answersContainer.appendChild(li);
             });
 
-            // Add event listeners for answer buttons
             document.querySelectorAll(".answer-button").forEach(button => {
                 button.addEventListener("click", checkAnswer);
             });
@@ -215,14 +210,12 @@
 
             currentQuestionIndex++;
 
-            // If more questions remain, show the next button
             if (currentQuestionIndex < quizQuestions.length) {
                 document.getElementById("next-button").style.display = "inline-block";
             } else {
                 showFinalScore();
             }
 
-            // Disable further clicking on answers
             document.querySelectorAll(".answer-button").forEach(button => {
                 button.disabled = true;
             });
@@ -231,31 +224,36 @@
         function showFinalScore() {
             document.getElementById("quiz-container").style.display = "none";
             document.getElementById("result").innerHTML = `Game Over! Your score is ${score}/${quizQuestions.length}`;
-            document.getElementById("name-input").style.display = "block"; // Show name input after game
+            document.getElementById("name-input").style.display = "block"; 
         }
 
-        function saveScore(playerName, playerScore) {
-            const scores = JSON.parse(localStorage.getItem('triviaScores')) || [];
-            scores.push({ name: playerName, score: playerScore });
-            scores.sort((a, b) => b.score - a.score); // Sort by score in descending order
-            localStorage.setItem('triviaScores', JSON.stringify(scores.slice(0, 20))); // Keep top 20 scores
+        function submitScore(name, score) {
+            fetch('/api/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, score })
+            })
+            .then(response => response.json())
+            .then(displayScoreboard);
         }
 
         function displayScoreboard() {
-            document.getElementById("name-input").style.display = "none"; // Hide the name input
-            const scoreboard = document.getElementById("scoreboard");
-            const scoreList = document.getElementById("score-list");
-            const scores = JSON.parse(localStorage.getItem('triviaScores')) || [];
-            scoreList.innerHTML = ''; // Clear previous scores
+            fetch('/api/scores')
+            .then(response => response.json())
+            .then(scores => {
+                const scoreList = document.getElementById('score-list');
+                scoreList.innerHTML = '';
 
-            scores.forEach((score, index) => {
-                const li = document.createElement("li");
-                li.textContent = `${index + 1}. ${score.name} - ${score.score}`;
-                scoreList.appendChild(li);
+                scores.forEach((score, index) => {
+                    const li = document.createElement("li");
+                    li.textContent = `${index + 1}. ${score.name} - ${score.score}`;
+                    scoreList.appendChild(li);
+                });
+
+                document.getElementById("scoreboard").style.display = "block";
+                document.getElementById("name-input").style.display = "none";
+                document.getElementById("home-button").style.display = "block";
             });
-
-            scoreboard.style.display = "block"; // Show scoreboard
-            document.getElementById("home-button").style.display = "block"; // Show home button
         }
     </script>
 
