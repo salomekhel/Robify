@@ -16,8 +16,14 @@
             height: 100vh;
             margin: 0;
             flex-direction: column;
+            padding: 10px;
         }
-    
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+        }
+
         button {
             background-color: #007BFF;
             color: white;
@@ -26,27 +32,49 @@
             border: none;
             cursor: pointer;
             margin-top: 20px;
+            font-size: 1rem;
         }
-    
+
         button:hover {
             background-color: #0056b3;
         }
-    
+
         #robby-quote {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-top: 20px;
             color: #333;
             text-align: center; /* Align text to center */
+            padding: 0 10px;
+            word-wrap: break-word;
         }
-    
+
         #robbyz-image {
             margin-top: 20px;
-            max-width: 400px; /* Increase max-width for larger images */
+            max-width: 100%; /* Make the image responsive */
             height: auto; /* Maintain aspect ratio */
-            display: block; /* Make sure the image is displayed as a block */
+            display: block;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem; /* Slightly smaller heading on mobile */
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 0.9rem; /* Slightly smaller button */
+            }
+
+            #robby-quote {
+                font-size: 1rem;
+            }
+
+            #robbyz-image {
+                max-width: 90%; /* Ensure image fits within smaller screens */
+            }
         }
     </style>
-    
 </head>
 <body>
 
@@ -106,8 +134,8 @@
             document.getElementById('robby-quote').textContent = randomQuote;
             const robbyImage = document.getElementById('robbyz-image');
             robbyImage.onerror = function() {
-            robbyImage.src = '/images/robby_default.jpg'; // Default image if the source fails
-        };
+                robbyImage.src = '/images/robby_default.jpg'; // Default image if the source fails
+            };
             robbyImage.src = randomImage;
             robbyImage.style.display = 'block';
         });
