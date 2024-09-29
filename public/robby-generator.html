@@ -58,7 +58,7 @@
         /* Mobile Responsiveness */
         @media (max-width: 600px) {
             h1 {
-                font-size: 1.5rem; /* Slightly smaller heading on mobile */
+                font-size: 1.0rem; /* Slightly smaller heading on mobile */
             }
 
             button {
@@ -71,7 +71,7 @@
             }
 
             #robbyz-image {
-                max-width: 90%; /* Ensure image fits within smaller screens */
+                max-width: 80%; /* Ensure image fits within smaller screens */
             }
         }
     </style>
@@ -84,6 +84,9 @@
     <!-- Display area for the generated quote and image -->
     <p id="robby-quote"></p>
     <img id="robbyz-image" alt="Robby Image" style="display:none; max-width: 400px; height: auto;">
+
+    <!-- New Home button -->
+    <button id="home-button">Home</button>
 
     <script>
         const quotes = [
@@ -123,6 +126,7 @@
             '/images/Subject_3.png'
         ];
 
+        // Generate random Robby quote and image
         document.getElementById('generate-robby-button').addEventListener('click', () => {
             // Generate a random quote
             const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -139,7 +143,13 @@
             robbyImage.src = randomImage;
             robbyImage.style.display = 'block';
         });
+
+        // Redirect to the home page
+        document.getElementById('home-button').addEventListener('click', () => {
+            window.location.href = '/'; // Assuming '/' is your home page
+        });
     </script>
 
 </body>
 </html>
+
