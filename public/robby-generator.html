@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Robby Generator</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,27 +16,23 @@
             height: 100vh;
             margin: 0;
             flex-direction: column;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 10px;
         }
 
         h1 {
             font-size: 2rem;
             text-align: center;
-            margin-bottom: 20px;
         }
 
         button {
             background-color: #007BFF;
             color: white;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 5px;
             border: none;
             cursor: pointer;
             margin-top: 20px;
-            font-size: 1.1rem;
-            width: 80%; /* Full-width on mobile */
-            max-width: 300px; /* Limiting width on larger screens */
+            font-size: 1rem;
         }
 
         button:hover {
@@ -46,32 +43,35 @@
             font-size: 1.2rem;
             margin-top: 20px;
             color: #333;
-            text-align: center;
+            text-align: center; /* Align text to center */
+            padding: 0 10px;
             word-wrap: break-word;
-            width: 100%; /* Make sure the text stays within the screen */
         }
 
         #robbyz-image {
             margin-top: 20px;
-            max-width: 100%; /* Image scales fully for mobile */
-            height: auto;
+            max-width: 100%; /* Make the image responsive */
+            height: auto; /* Maintain aspect ratio */
             display: block;
         }
 
-        /* Media Queries for better mobile experience */
+        /* Mobile Responsiveness */
         @media (max-width: 600px) {
             h1 {
-                font-size: 1.5rem; /* Slightly smaller heading for mobile */
+                font-size: 1.0rem; /* Slightly smaller heading on mobile */
             }
 
             button {
-                padding: 10px 16px; /* Smaller button padding for mobile */
-                font-size: 1rem;
+                padding: 8px 16px;
+                font-size: 0.9rem; /* Slightly smaller button */
             }
 
             #robby-quote {
                 font-size: 1rem;
-                margin-top: 15px;
+            }
+
+            #robbyz-image {
+                max-width: 65%; /* Ensure image fits within smaller screens */
             }
         }
     </style>
@@ -83,7 +83,7 @@
 
     <!-- Display area for the generated quote and image -->
     <p id="robby-quote"></p>
-    <img id="robbyz-image" alt="Robby Image" style="display:none;">
+    <img id="robbyz-image" alt="Robby Image" style="display:none; max-width: 400px; height: auto;">
 
     <!-- New Home button -->
     <button id="home-button">Home</button>
@@ -152,3 +152,4 @@
 
 </body>
 </html>
+
