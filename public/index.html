@@ -21,6 +21,10 @@
         <button id="trivia-button" class="shared-button">Play Robby Trivia Game</button> <!-- Trivia game button -->
 
         <a href="/post-birthday-message" id="post-birthday-button">Post a Birthday Message for Robby</a>
+
+        <!-- Add this button in the existing welcome screen of index.html -->
+        <button id="robby-generator-button" class="shared-button">Robby Generator</button>
+
     </div>
 
     <!-- Loading screen after login but before image and phrase -->
@@ -55,6 +59,9 @@
         document.getElementById('trivia-button').addEventListener('click', function() {
             window.location.href = '/trivia'; // Redirect to the trivia game page
         });
+        document.getElementById('robby-generator-button').addEventListener('click', function() {
+        window.location.href = '/robby-generator';
+    });
 
         window.onload = function() {
             // Check if there's an access token in the URL

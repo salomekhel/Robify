@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robby Generator</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #robby-quote {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        #robby-image {
+            margin-top: 20px;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Robby Generator!</h1>
+    <button id="generate-robby-button">Generate ROB</button>
+
+    <!-- Display area for the generated quote and image -->
+    <p id="robby-quote"></p>
+    <img id="robby-image" alt="Robby Image" style="display:none;">
+
+    <script>
+        const quotes = [
+            'YES YES YESSS!!!',
+            'BOOOM BOOOM CHICKEN',
+            'Beyond',
+            'You’re WEIRD',
+            'Guys, maybe he’s too kinky to have sex',
+            'There is genuinely nothing I would not let Harry Styles do to me',
+            'I would be lying if I said I didn’t want to be fucked by a god',
+            'you’re going to ostracize yourself',
+            'SALMON FISHING IN THE RYEEEE',
+            'mew mew meewwwwww',
+            'oh STOP IT'
+        ];
+
+        const images = [
+            '/images/IMG_0814.PNG',
+            '/images/IMG_0817.PNG',
+            '/images/IMG_0837.png',
+            '/images/IMG_0839.PNG',
+            '/images/IMG_0840.PNG',
+            '/images/IMG_0842.PNG',
+            '/images/IMG_0843.PNG',
+            '/images/IMG_0909.PNG',
+            '/images/IMG_0911.PNG',
+            '/images/IMG_0913.PNG',
+            '/images/IMG_0914.PNG',
+            '/images/robby_default.jpg',
+            '/images/robby_hiphop.jpg',
+            '/images/robby_hophop.jpg',
+            '/images/robby_indie.jpg',
+            '/images/robby_kanye.jpg',
+            '/images/robby_pop.jpg',
+            '/images/robby_rock.jpg',
+            '/images/robby_taylor.jpg',
+            '/images/Subject_2.png',
+            '/images/Subject_3.png'
+        ];
+
+        document.getElementById('generate-robby-button').addEventListener('click', () => {
+            // Generate a random quote
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+            // Generate a random image
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+
+            // Display the quote and image
+            document.getElementById('robby-quote').textContent = randomQuote;
+            const robbyImage = document.getElementById('robby-image');
+            robbyImage.src = randomImage;
+            robbyImage.style.display = 'block';
+        });
+    </script>
+
+</body>
+</html>

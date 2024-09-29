@@ -143,6 +143,10 @@ app.get('/trivia', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'trivia.html'));  // Adjust the path if necessary
 });
 
+app.get('/robby-generator', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'robby-generator.html'));
+});
+
 // Serve the homepage
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
