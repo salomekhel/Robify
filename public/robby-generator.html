@@ -39,12 +39,13 @@
             text-align: center; /* Align text to center */
         }
     
-        #robby-image {
+        #robbyz-image {
             margin-top: 20px;
             max-width: 400px; /* Increase max-width for larger images */
             height: auto; /* Maintain aspect ratio */
             display: block; /* Make sure the image is displayed as a block */
             border: 2px solid #007BFF; /* Optional: Add a border for visibility */
+            border: 2px solid red; /* For visibility */
         }
     </style>
     
@@ -56,7 +57,7 @@
 
     <!-- Display area for the generated quote and image -->
     <p id="robby-quote"></p>
-    <img id="robby-image" alt="Robby Image" style="display:none; max-width: 400px; height: auto;">
+    <img id="robbyz-image" alt="Robby Image" style="display:none; max-width: 400px; height: auto;">
 
     <script>
         const quotes = [
@@ -75,26 +76,25 @@
 
         const images = [
             '/images/IMG_0817.PNG',
-            'https://via.placeholder.com/400'
-            // '/images/IMG_0814.PNG',
-            // '/images/IMG_0837.png',
-            // '/images/IMG_0839.PNG',
-            // '/images/IMG_0842.PNG',
-            // '/images/IMG_0843.PNG',
-            // '/images/IMG_0909.PNG',
-            // '/images/robby_hiphop.jpg',
-            // '/images/robby_default.jpg',
-            // '/images/IMG_0911.PNG',
-            // '/images/IMG_0913.PNG',
-            // '/images/IMG_0914.PNG',
-            // '/images/robby_default.jpg',
-            // '/images/robby_indie.jpg',
-            // '/images/robby_kanye.jpg',
-            // '/images/robby_pop.jpg',
-            // '/images/robby_rock.jpg',
-            // '/images/robby_taylor.jpg',
-            // '/images/Subject_2.png',
-            // '/images/Subject_3.png'
+            '/images/IMG_0814.PNG',
+            '/images/IMG_0837.png',
+            '/images/IMG_0839.PNG',
+            '/images/IMG_0842.PNG',
+            '/images/IMG_0843.PNG',
+            '/images/IMG_0909.PNG',
+            '/images/robby_hiphop.jpg',
+            '/images/robby_default.jpg',
+            '/images/IMG_0911.PNG',
+            '/images/IMG_0913.PNG',
+            '/images/IMG_0914.PNG',
+            '/images/robby_default.jpg',
+            '/images/robby_indie.jpg',
+            '/images/robby_kanye.jpg',
+            '/images/robby_pop.jpg',
+            '/images/robby_rock.jpg',
+            '/images/robby_taylor.jpg',
+            '/images/Subject_2.png',
+            '/images/Subject_3.png'
         ];
 
         document.getElementById('generate-robby-button').addEventListener('click', () => {
@@ -106,7 +106,7 @@
 
             // Display the quote and image
             document.getElementById('robby-quote').textContent = randomQuote;
-            const robbyImage = document.getElementById('robby-image');
+            const robbyImage = document.getElementById('robbyz-image');
             robbyImage.onerror = function() {
             robbyImage.src = '/images/robby_default.jpg'; // Default image if the source fails
         };
