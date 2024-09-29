@@ -17,7 +17,7 @@
             margin: 0;
             flex-direction: column;
         }
-
+    
         button {
             background-color: #007BFF;
             color: white;
@@ -27,22 +27,27 @@
             cursor: pointer;
             margin-top: 20px;
         }
-
+    
         button:hover {
             background-color: #0056b3;
         }
-
+    
         #robby-quote {
             font-size: 1.5rem;
             margin-top: 20px;
             color: #333;
+            text-align: center; /* Align text to center */
         }
-
+    
         #robby-image {
             margin-top: 20px;
-            max-width: 300px;
+            max-width: 400px; /* Increase max-width for larger images */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Make sure the image is displayed as a block */
+            border: 2px solid #007BFF; /* Optional: Add a border for visibility */
         }
     </style>
+    
 </head>
 <body>
 
