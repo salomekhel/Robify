@@ -102,6 +102,9 @@
             // Display the quote and image
             document.getElementById('robby-quote').textContent = randomQuote;
             const robbyImage = document.getElementById('robby-image');
+            robbyImage.onerror = function() {
+            robbyImage.src = '/images/robby_default.jpg'; // Default image if the source fails
+        };
             robbyImage.src = randomImage;
             robbyImage.style.display = 'block';
         });
