@@ -136,7 +136,7 @@ p {
     padding: 12px 30px; /* Button padding */
     border-radius: 5px; /* Rounded corners */
     text-decoration: none; /* Remove underline */
-    font-size: 1rem; /* Font size */
+    font-size: 2rem; /* Font size */
     margin: 10px 0; /* Space between buttons */
     transition: background-color 0.3s ease; /* Smooth background transition */
     display: inline-block; /* Make it behave like a button */
