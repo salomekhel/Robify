@@ -15,6 +15,8 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
@@ -24,11 +26,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             width: 100%;
+            box-sizing: border-box;
         }
 
         h1 {
             text-align: center;
             color: #007BFF;
+            font-size: 2rem;
         }
 
         .question {
@@ -53,6 +57,9 @@
             border: none;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            font-size: 1rem;
         }
 
         button:hover {
@@ -76,6 +83,15 @@
         #name-input {
             display: none; /* Initially hidden */
             margin-top: 20px;
+            text-align: center;
+        }
+
+        #name-input input {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
         }
 
         #scoreboard {
@@ -91,6 +107,30 @@
 
         #scoreboard li {
             margin: 5px 0;
+        }
+
+        /* Media Queries for Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem; /* Smaller heading for mobile */
+            }
+
+            .question {
+                font-size: 1rem; /* Smaller font size for questions */
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            #result {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -284,5 +324,3 @@
 
 </body>
 </html>
-
-
